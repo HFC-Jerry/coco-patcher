@@ -1,0 +1,3 @@
+share/coco-patcher/* usr/share/coco-patcher
+share/applications/* usr/share/applications
+coco-patcher usr/bin

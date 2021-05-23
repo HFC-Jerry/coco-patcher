@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=true
+Icon=/usr/share/coco-patcher/icon.svg
+Exec=coco-patcher
+Categories=System;
+Name=Coco-Patcher

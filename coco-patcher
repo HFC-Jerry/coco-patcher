@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Checking internet connection
+ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && online=true || online=false
+if "$online"; then
+    echo "Online"
+else
+    zenity --info --title="Coco-patcher" --text="No internet connection! Connect to internet and try again." --icon-name=start-here --width=300
+    exit
+fi
+
+previous_version=$(dpkg -s coco-patcher | grep '^Version:')
+
+# Updating coco-patcher if available
+pkexec bash -c "apt-get update; apt-get install -y coco-patcher || { echo 'Unable to update Coco-Patcher. Press enter to continue.'; read -n 1  ; exit 1; }"
+
+current_version=$(dpkg -s coco-patcher | grep '^Version:')
+
+if [[ $previous_version != $current_version ]]; then
+    $(basename $0) && exit
+fi
+
+version=$(grep "Version Accessible-Coconut" /usr/share/Coconut/customization_details.text | cut -d "-" -f3)
+
+files=`ls /usr/share/coco-patcher/$version/*.sh /usr/share/coco-patcher/general/*.sh 2> /dev/null`
+
+answer=$(zenity --width=600 --height=400 --title="Coco-Patcher" --ok-label=Run --cancel-label=Exit --text="Select the patch to run" --list --column "Patch" $files)
+
+bash -e $answer
+
+
+
