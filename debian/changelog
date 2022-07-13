@@ -1,3 +1,9 @@
+coco-patcher (0.1.6.1) focal; urgency=medium
+
+  * Script for compiling and installing RHVoice added
+
+ -- Nalin <nalin.x.linux@gmail.com>  Wed, 13 Jul 2022 20:59:40 +0530
+
 coco-patcher (0.1.6) focal; urgency=medium
 
   * Installation scripts of IBus-Braille and Sharada-Braille-Writer merged
