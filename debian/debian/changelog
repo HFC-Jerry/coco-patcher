@@ -1,0 +1,5 @@
+coco-patcher (2.2-1) UNRELEASED; urgency=medium
+
+  * Initial release. (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- jerry <jerry@unknown>  Thu, 19 Jun 2025 11:53:40 +0530

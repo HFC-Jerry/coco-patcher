@@ -1,0 +1,30 @@
+Source: coco-patcher
+Section: libs
+Priority: optional
+Maintainer: jerry <jerry@unknown>
+Rules-Requires-Root: no
+Build-Depends:
+ debhelper-compat (= 13),
+Standards-Version: 4.6.2
+Homepage: <insert the upstream URL, if relevant>
+#Vcs-Browser: https://salsa.debian.org/debian/coco-patcher
+#Vcs-Git: https://salsa.debian.org/debian/coco-patcher.git
+
+Package: coco-patcher-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ coco-patcherBROKEN (= ${binary:Version}),
+ ${misc:Depends},
+Description: <insert up to 60 chars description>
+ <Insert long description, indented with spaces.>
+
+Package: coco-patcherBROKEN
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+Description: <insert up to 60 chars description>
+ <Insert long description, indented with spaces.>

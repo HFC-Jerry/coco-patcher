@@ -1,30 +1,47 @@
 #!/bin/bash
 
 # Checking internet connection
-ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && online=true || online=false
-if "$online"; then
+gateway_ip=$(ip r | grep default | awk '{print $3}')
+if ping -q -w 1 -c 1 "$gateway_ip" > /dev/null; then
     echo "Online"
 else
-    zenity --info --title="Coco-patcher" --text="No internet connection! Connect to internet and try again." --icon-name=start-here --width=300
-    exit
+    zenity --info --title="Coco-Patcher" --text="No internet connection! Connect to internet and try again." --icon-name=start-here --width=300
+    exit 1
 fi
 
-previous_version=$(dpkg -s coco-patcher | grep '^Version:')
+# Get the currently installed version
+previous_version=$(dpkg -s coco-patcher 2>/dev/null | grep '^Version:' | awk '{print $2}')
 
-# Updating coco-patcher if available
-pkexec bash -c "apt-get update; apt-get install -y coco-patcher || { echo 'Unable to update Coco-Patcher. Press enter to continue.'; read -n 1  ; exit 1; }"
+# Update coco-patcher if available
+pkexec bash -c "apt-get update && apt-get install -y coco-patcher || { echo 'Unable to update Coco-Patcher. Press enter to continue.'; read -n 1; exit 1; }"
 
-current_version=$(dpkg -s coco-patcher | grep '^Version:')
+# Get the updated version
+current_version=$(dpkg -s coco-patcher 2>/dev/null | grep '^Version:' | awk '{print $2}')
 
-if [[ $previous_version != $current_version ]]; then
-    $(basename $0) && exit
+# If the version changed, restart the script
+if [[ "$previous_version" != "$current_version" ]]; then
+    exec "$(basename "$0")"
 fi
 
+# Get the OS version for patch selection
 version=$(grep "Version Accessible-Coconut" /usr/share/Coconut/customization_details.text | cut -d "-" -f3)
 
-files=`cd /usr/share/coco-patcher/; ls $version/*.sh general/*.sh 2> /dev/null`
+# List patch files
+files=$(cd /usr/share/coco-patcher/ && ls $version/*.sh general/*.sh 2>/dev/null)
 
-answer=$(zenity --width=600 --height=400 --title="Coco-Patcher" --ok-label=Run --cancel-label=Exit --text="Select the patch to run" --list --column "Patch" $files)
+# If no patches found
+if [[ -z "$files" ]]; then
+    zenity --info --title="Coco-Patcher" --text="No patches available for your version." --width=300
+    exit 1
+fi
 
-bash -e /usr/share/coco-patcher/$answer
+# Display selection dialog
+answer=$(zenity --width=600 --height=400 --title="Coco-Patcher" --ok-label="Run" --cancel-label="Exit" --text="Select the patch to run" --list --column "Patch" $files)
 
+# If user cancels
+if [[ -z "$answer" ]]; then
+    exit 0
+fi
+
+# Run selected patch
+bash -e /usr/share/coco-patcher/"$answer"

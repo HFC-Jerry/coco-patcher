@@ -35,7 +35,6 @@ if [ $? -ne 0 ]; then
     exit
 fi
 
-pkexec sed -i '/Version Accessible-Coconut-20.04.03/c\Version Accessible-Coconut-20.04.04' /usr/share/Coconut/customization_details.text
-echo "System updated to 20.04.04. Press any key to quit."
+pkexec sed -i '/Version Accessible-Coconut-24.04-beta/c\Version Accessible-Coconut-20.04.01' /usr/share/Coconut/customization_details.text
+echo "System updated to 24.04.01. Press any key to quit."
 read -n 1
-
